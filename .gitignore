@@ -1,0 +1,20 @@
+# Sensitive auth/session data
+auth.json
+
+# Runtime history/cache/state
+history.jsonl
+models_cache.json
+version.json
+.personality_migration
+
+# Runtime directories
+log/
+sessions/
+shell_snapshots/
+tmp/
+
+# System-managed built-in skills (keep custom skills versioned)
+skills/.system/
+
+# OS/editor noise
+.DS_Store

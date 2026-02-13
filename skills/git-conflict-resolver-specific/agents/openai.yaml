@@ -1,0 +1,3 @@
+display_name: "Git Conflict Resolver Specific"
+short_description: "Migrate and run the workflow from Claude command git/conflict-resolver-specific.md. Use when asked to perform tasks"
+default_prompt: "Run the git-conflict-resolver-specific workflow for this repository context."

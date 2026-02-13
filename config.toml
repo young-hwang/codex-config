@@ -1,0 +1,31 @@
+model = "gpt-5.3-codex"
+profile = "safe"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+model_reasoning_effort = "medium"
+model_reasoning_summary = "concise"
+model_auto_compact_token_limit = 180000
+tool_output_token_limit = 12000
+
+[history]
+persistence = "save-all"
+max_bytes = 104857600
+
+[features]
+unified_exec = true
+shell_snapshot = true
+
+[profiles.safe]
+model = "gpt-5.3-codex"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+model_reasoning_effort = "medium"
+
+[profiles.fast]
+model = "gpt-5.3-codex-spark"
+approval_policy = "on-request"
+sandbox_mode = "workspace-write"
+web_search = "cached"
+model_reasoning_effort = "low"

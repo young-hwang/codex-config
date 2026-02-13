@@ -1,0 +1,3 @@
+display_name: "Build and Fix"
+short_description: "Migrate and run the workflow from Claude command build-fix.md. Use when asked to perform tasks matching build-fix, for"
+default_prompt: "Run the build-fix workflow for this repository context."

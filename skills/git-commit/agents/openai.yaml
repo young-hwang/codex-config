@@ -1,0 +1,3 @@
+display_name: "Command: Commit"
+short_description: "Create atomic git commits with conventional commit messages. Use when asked to stage changes, run pre-commit checks"
+default_prompt: "Run the git-commit workflow for this repository context."

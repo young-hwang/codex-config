@@ -1,0 +1,3 @@
+display_name: "Refactor Clean"
+short_description: "Migrate and run the workflow from Claude command refactor-clean.md. Use when asked to perform tasks matching"
+default_prompt: "Run the refactor-clean workflow for this repository context."

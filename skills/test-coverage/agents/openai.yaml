@@ -1,0 +1,3 @@
+display_name: "Test Coverage"
+short_description: "Analyze and improve test coverage. Use when asked to identify gaps, propose missing test cases, implement additional"
+default_prompt: "Run the test-coverage workflow for this repository context."

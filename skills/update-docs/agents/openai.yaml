@@ -1,0 +1,3 @@
+display_name: "Update Documentation"
+short_description: "Migrate and run the workflow from Claude command update-docs.md. Use when asked to perform tasks matching update-docs"
+default_prompt: "Run the update-docs workflow for this repository context."

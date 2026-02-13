@@ -1,0 +1,3 @@
+display_name: "Create Pull Request Command"
+short_description: "Create a GitLab merge request from current changes. Use when asked to branch, format, split commits by concern, push"
+default_prompt: "Run the gitlab-create-mr workflow for this repository context."

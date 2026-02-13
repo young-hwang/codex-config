@@ -1,0 +1,3 @@
+display_name: "Create Pull Request Command"
+short_description: "Migrate and run the workflow from Claude command github/create-pr.md. Use when asked to perform tasks matching"
+default_prompt: "Run the github-create-pr workflow for this repository context."

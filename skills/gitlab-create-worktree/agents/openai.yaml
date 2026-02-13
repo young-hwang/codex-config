@@ -1,0 +1,3 @@
+display_name: "GitLab Issue Worktree Creation"
+short_description: "Migrate and run the workflow from Claude command gitlab/create-worktree.md. Use when asked to perform tasks matching"
+default_prompt: "Run the gitlab-create-worktree workflow for this repository context."
