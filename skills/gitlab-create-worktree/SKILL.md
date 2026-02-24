@@ -22,8 +22,8 @@ Provide a GitLab issue URL or issue number: $ARGUMENTS
 
 ## Workflow
 
-1. **Check glab CLI installation via `~/.claude/scripts/check_glab.sh`**
-   - Executes the `~/.claude/scripts/check_glab.sh` script without any arguments to verify `glab` is installed and authenticated.
+1. **Check glab CLI installation via `~/.codex/script/check_glab.sh`**
+   - Executes the `~/.codex/script/check_glab.sh` script without any arguments to verify `glab` is installed and authenticated.
    - The script will stop execution and provide instructions if `glab` is not found or configured.
 
 2. **Extract and validate issue**
@@ -37,15 +37,15 @@ Provide a GitLab issue URL or issue number: $ARGUMENTS
    - If no branch exists, create branch name from issue (e.g., `feature/123-feature-description`)
 
 4. **Create Git Worktree**
-    - Executes `~/.claude/scripts/git-create-worktree.sh` passing the determined branch name (e.g., `feature/123-feature-description`) as the sole argument.
+    - Executes `~/.codex/script/git-create-worktree.sh` passing the determined branch name (e.g., `feature/123-feature-description`) as the sole argument.
     - This script handles the logic for creating the worktree and outputs its path.
-    - Example: `~/.claude/scripts/git-create-worktree.sh <branch_name>`
+    - Example: `~/.codex/script/git-create-worktree.sh <branch_name>`
 
 5. **Create tmux Development Session**
-    - Executes `~/.claude/scripts/tmux-create-session.sh` with two arguments:
+    - Executes `~/.codex/script/tmux-create-session.sh` with two arguments:
       1. Session Name: `{issue_number}-develop`
       2. Target Directory: The path to the newly created worktree directory from step 4.
-    - Example: `~/.claude/scripts/tmux-create-session.sh {issue_number}-develop <path_to_worktree>`
+    - Example: `~/.codex/script/tmux-create-session.sh {issue_number}-develop <path_to_worktree>`
 
 ## Notes
 

@@ -441,10 +441,10 @@ After MR is created:
 - Spec-kit - Development methodology tools
 
 ### Required Scripts
-- `~/.claude/scripts/check_glab.sh`
-- `~/.claude/scripts/git-create-worktree.sh`
-- `~/.claude/scripts/spec-kit-init.sh`
-- `~/.claude/scripts/tmux-create-session.sh`
+- `~/.codex/script/check_glab.sh`
+- `~/.codex/script/git-create-worktree.sh`
+- `~/.codex/script/spec-kit-init.sh`
+- `~/.codex/script/tmux-create-session.sh`
 
 ### Required Files
 - `.gitlab/merge_request_templates/default.md` - MR template
