@@ -39,7 +39,10 @@ Provide a GitLab issue URL or issue number: $ARGUMENTS
 4. **Kill tmux session**
    - Find tmux session named `<issue-number>-develop` or `<issue-number>-*`
    - Kill the session using `tmux kill-session`
-   - Skip if tmux is not installed or session doesn't exist
+   - Always run tmux commands (`tmux ls`, `tmux kill-session`) with elevated permissions in Codex
+   - If tmux socket access fails (permission), treat it as a permission failure (not no-session) and rerun with elevated permissions
+   - Do not suppress tmux stderr; treat connection errors as failures
+   - Skip only if tmux is not installed or no matching session exists
    - Confirm session terminated
 
 5. **Remove worktree**
@@ -127,18 +130,26 @@ else
 fi
 
 # Step 5: Kill tmux session
+# NOTE: In Codex, run this step with elevated permissions by default to access tmux socket
 SESSION_NAME="${ISSUE_NUMBER}-develop"
 TMUX_CLEANED=false
 
 if command -v tmux &> /dev/null; then
     # Find sessions matching the issue number
-    MATCHING_SESSIONS=$(tmux ls 2>/dev/null | grep "^${ISSUE_NUMBER}-" | cut -d: -f1)
+    TMUX_LIST_OUTPUT=$(tmux ls 2>&1)
+    if [ $? -ne 0 ]; then
+        echo "tmux ls failed: $TMUX_LIST_OUTPUT"
+        echo "Retry tmux commands with elevated permissions"
+        MATCHING_SESSIONS=""
+    else
+        MATCHING_SESSIONS=$(printf '%s\n' "$TMUX_LIST_OUTPUT" | grep "^${ISSUE_NUMBER}-" | cut -d: -f1)
+    fi
 
     if [ -n "$MATCHING_SESSIONS" ]; then
         echo "Found tmux session(s) to clean up:"
         while IFS= read -r session; do
             echo "  - $session"
-            tmux kill-session -t "$session" 2>/dev/null
+            tmux kill-session -t "$session"
             if [ $? -eq 0 ]; then
                 echo "    ✓ Killed session: $session"
                 TMUX_CLEANED=true
@@ -335,6 +346,7 @@ tmux kill-session -t <session-name>
 - **Graceful failure**: If tmux, worktree, or branch doesn't exist, the command will skip that step and continue
 - **Manual intervention**: If automatic cleanup fails due to uncommitted changes, use manual cleanup commands
 - **Consistency**: This command is designed to work with worktrees created by the `create-worktree` command
+- **Tmux permissions**: Always run tmux steps with elevated permissions in Codex; if `tmux ls` returns socket permission errors, treat it as permission failure instead of no session
 - **Multiple sessions**: The command will find and clean up all tmux sessions matching the issue number pattern
 
 ## Best Practices
