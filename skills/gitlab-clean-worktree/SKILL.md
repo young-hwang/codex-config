@@ -48,12 +48,11 @@ Provide a GitLab issue URL or issue number: $ARGUMENTS
    - If removal fails (uncommitted changes), offer force removal option
    - Handle case where worktree doesn't exist
 
-6. **Delete git branch**
-   - Delete the local branch using `git branch -d <branch-name>`
-   - Delete the remote branch using `git push origin --delete <branch-name>`
+6. **Delete local git branch (after worktree removal)**
+   - Delete the local branch using `git branch -d <branch-name>` only after worktree removal succeeds
    - Skip if no branch was found in step 3
+   - Skip if worktree removal did not succeed
    - If local deletion fails (unmerged), offer force deletion option
-   - Handle case where remote branch doesn't exist
 
 7. **Confirm cleanup**
    - Display what was cleaned up (tmux session, worktree, branch)
@@ -219,11 +218,11 @@ fi
 
 echo ""
 
-# Step 7: Delete git branch
+# Step 7: Delete local git branch (after worktree cleanup)
 BRANCH_CLEANED=false
 
-if [ -n "$BRANCH_NAME" ]; then
-    echo "Deleting branch: $BRANCH_NAME"
+if [ -n "$BRANCH_NAME" ] && [ "$WORKTREE_CLEANED" = true ]; then
+    echo "Deleting local branch: $BRANCH_NAME"
 
     # Delete local branch
     if git branch --list "$BRANCH_NAME" | grep -q .; then
@@ -241,22 +240,10 @@ if [ -n "$BRANCH_NAME" ]; then
     else
         echo "  No local branch found: $BRANCH_NAME"
     fi
-
-    # Delete remote branch
-    if git ls-remote --heads origin "$BRANCH_NAME" | grep -q .; then
-        git push origin --delete "$BRANCH_NAME" 2>/dev/null
-
-        if [ $? -eq 0 ]; then
-            echo "  ✓ Deleted remote branch: origin/$BRANCH_NAME"
-            BRANCH_CLEANED=true
-        else
-            echo "  ✗ Failed to delete remote branch: origin/$BRANCH_NAME"
-        fi
-    else
-        echo "  No remote branch found: origin/$BRANCH_NAME"
-    fi
+elif [ -n "$BRANCH_NAME" ]; then
+    echo "Skipping local branch deletion because worktree removal did not complete"
 else
-    echo "Skipping branch deletion (no branch found)"
+    echo "Skipping local branch deletion (no branch found)"
 fi
 
 echo ""
@@ -270,7 +257,7 @@ if [ "$TMUX_CLEANED" = true ] || [ "$WORKTREE_CLEANED" = true ] || [ "$BRANCH_CL
     echo "✓ Cleanup completed successfully"
     [ "$TMUX_CLEANED" = true ] && echo "  - tmux session(s) killed"
     [ "$WORKTREE_CLEANED" = true ] && echo "  - worktree(s) removed"
-    [ "$BRANCH_CLEANED" = true ] && echo "  - branch deleted"
+    [ "$BRANCH_CLEANED" = true ] && echo "  - local branch deleted"
 else
     echo "⚠ No cleanup performed"
     echo "  No tmux session, worktree, or branch found for issue #$ISSUE_NUMBER"
@@ -300,23 +287,19 @@ git worktree remove --force ../worktrees/<branch-name>
 tmux kill-session -t <issue-number>-develop
 ```
 
-### Delete local and remote branch:
+### Delete local branch:
 ```bash
 # Safe delete (fails if unmerged)
 git branch -d <branch-name>
 
 # Force delete (even if unmerged)
 git branch -D <branch-name>
-
-# Delete remote branch
-git push origin --delete <branch-name>
 ```
 
-### Remove worktree, branch, and tmux session:
+### Remove worktree, local branch, and tmux session:
 ```bash
 git worktree remove ../worktrees/<branch-name>
 git branch -d <branch-name>
-git push origin --delete <branch-name>
 tmux kill-session -t <issue-number>-develop
 ```
 
@@ -348,6 +331,7 @@ tmux kill-session -t <session-name>
 - **Verification**: Always verify the issue number before cleanup to avoid removing the wrong worktree
 - **Branch detection**: The command searches for branches using multiple naming patterns (feature/N, issue-N, N-)
 - **Branch safety**: Local branch deletion uses `-d` (safe delete) by default, which fails if the branch has unmerged changes
+- **Branch cleanup order**: Local branch deletion is attempted only after worktree removal succeeds
 - **Graceful failure**: If tmux, worktree, or branch doesn't exist, the command will skip that step and continue
 - **Manual intervention**: If automatic cleanup fails due to uncommitted changes, use manual cleanup commands
 - **Consistency**: This command is designed to work with worktrees created by the `create-worktree` command
@@ -358,5 +342,5 @@ tmux kill-session -t <session-name>
 1. **Before cleanup**: Ensure all changes are committed and pushed to remote
 2. **Verify completion**: Check that the issue is truly complete before cleaning up
 3. **Review changes**: Use `git status` in the worktree before cleanup
-4. **Branch deletion**: The cleanup now deletes both local and remote branches automatically
+4. **Branch deletion**: The cleanup deletes the local branch after worktree removal
 5. **Batch cleanup**: Periodically clean up old worktrees for completed issues to save disk space

@@ -56,4 +56,4 @@ Provide a GitLab issue URL or issue number: $ARGUMENTS
 - Creates descriptive branch names from issue title if no branch exists (format: `feature/{number}-{slug}`)
 - Supports both local and remote branches
 - Automatically creates a tmux session named `{issue-number}-develop` if tmux is installed
-- Automatically starts claude code in the tmux session for immediate development
+- Automatically starts codex in the tmux session for immediate development
